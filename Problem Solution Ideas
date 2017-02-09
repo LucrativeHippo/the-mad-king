@@ -1,0 +1,35 @@
+Proceed:
+3) Store 5x5
+
+4) Function for all legal moves of a given piece
+5) Test
+6) Make this function super efficient
+
+*********************************************
+ALEX'S NOTE: Pieces can't share the same spot
+Have pointer for the pieces' graph position??
+Might be better to use dictionary over graph?
+Find out what the best way to store this is!!
+*********************************************
+
+7) Design a terminal position function to test for game end
+----Relates to successor function also super efficient
+
+8) Minimax algorithm
+--TEST TEST TEST
+
+9) Design simple game tree
+
+10) Should use successor function interface
+
+11) Try should be to deep
+12) Put depth limit on minimax
+----Create heuristic eval for things at depth limit
+----should report true value of position if it is terminal position
+----guesses values for non terminal positions
+
+13) Depth limited minimax works
+----develop alpha-beta
+----add couple params and conditions to implement
+
+14) Player can play against computer
