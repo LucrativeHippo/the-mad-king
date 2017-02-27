@@ -9,9 +9,9 @@ class MyTestObject:
         assert self.p1 or not self.isKing
 class standardDictBoard:
     def __init__(self):
-        self.board ={1:'D', 2:'-', 3:'-', 4:'D', 5:'-', 6:'-', 7:'K',
-                     8: '-', 9: '-', 10: 'G', 11: 'G', 12: 'G', 13: '-', 14: '-',
-                     15: '-', 16: '-', 17: '-', 18: '-', 19: '-', 20: '-', 21: '-',
+        self.board = {1: 'D', 2: '-', 3: '-', 4: 'G', 5: '-', 6: '-', 7: 'D',
+                     8: '-', 9: '-', 10: 'G', 11: 'K', 12: 'G', 13: '-', 14: '-',
+                     15: '-', 16: '-', 17: '-', 18: 'G', 19: '-', 20: '-', 21: '-',
                      22: '-', 23: '-', 24: '-', 25: '-', 26: '-', 27: '-', 28: '-',
                      29: '-', 30: '-', 31: '-', 32: '-', 33: '-', 34: '-', 35: '-',
                      36: '-', 37: 'D', 38: '-', 39: 'D', 40: '-', 41: 'D', 42: '-',
@@ -19,7 +19,7 @@ class standardDictBoard:
 
     def toBoard(self):
         for key in range(1,8):
-            print(self.board.get(key),end='')
+            print(self.board.get(key), end='')
         print("")
         for key in range(8,15):
             print(self.board.get(key), end='')
@@ -55,6 +55,15 @@ class standardDictBoard:
                     listMoves.append(location-7)
                 if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
                     listMoves.append(location+7)
+                if self.board.get(location-1)\
+                        == 'G'and self.spaceEmpty(location-2)and self.isValidLocation(location-2):
+                    listMoves.append(location - 2)
+                if self.board.get(location-7)\
+                        == 'G'and self.spaceEmpty(location-14)and self.isValidLocation(location-14):
+                    listMoves.append(location - 14)
+                if self.board.get(location+7)\
+                        == 'G'and self.spaceEmpty(location+14)and self.isValidLocation(location+14):
+                    listMoves.append(location + 14)
 
             elif location % 7 == 1:
                 if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
@@ -63,8 +72,53 @@ class standardDictBoard:
                     listMoves.append(location-7)
                 if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
                     listMoves.append(location+7)
+                if self.board.get(location+1) \
+                        == 'G'and self.spaceEmpty(location+2)and self.isValidLocation(location+2):
+                    listMoves.append(location + 2)
+                if self.board.get(location-7) \
+                        == 'G'and self.spaceEmpty(location-14)and self.isValidLocation(location-14):
+                    listMoves.append(location - 14)
+                if self.board.get(location+7) \
+                        == 'G'and self.spaceEmpty(location+14)and self.isValidLocation(location+14):
+                    listMoves.append(location + 14)
+            else:
+                if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
+                    listMoves.append(location-1)
+                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
+                    listMoves.append(location-7)
+                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
+                    listMoves.append(location+7)
+                if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
+                    listMoves.append(location+1)
+                if self.board.get(location-1) \
+                        == 'G'and self.spaceEmpty(location-2)and self.isValidLocation(location-2):
+                    listMoves.append(location - 2)
+                if self.board.get(location-7)\
+                        == 'G'and self.spaceEmpty(location-14)and self.isValidLocation(location-14):
+                    listMoves.append(location - 14)
+                if self.board.get(location+7)\
+                        == 'G'and self.spaceEmpty(location+14)and self.isValidLocation(location+14):
+                    listMoves.append(location + 14)
+                if self.board.get(location+1)\
+                        == 'G'and self.spaceEmpty(location+2)and self.isValidLocation(location+2):
+                    listMoves.append(location + 2)
 
+        if self.board.get(location) == 'G':
+            if location % 7 == 0:
+                if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
+                    listMoves.append(location-1)
+                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
+                    listMoves.append(location-7)
+                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
+                    listMoves.append(location+7)
 
+            elif location % 7 == 1:
+                if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
+                    listMoves.append(location+1)
+                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
+                    listMoves.append(location-7)
+                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
+                    listMoves.append(location+7)
             else:
                 if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
                     listMoves.append(location-1)
@@ -75,9 +129,50 @@ class standardDictBoard:
                 if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
                     listMoves.append(location+1)
 
-       # if (self.board.get(location) == 'G'):
+        if self.board.get(location) == 'D':
+            if location % 7 == 0:
+                if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
+                    listMoves.append(location-1)
+                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
+                    listMoves.append(location-7)
+                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
+                    listMoves.append(location+7)
+                if self.spaceEmpty(location+6) and self.isValidLocation(location+6):
+                    listMoves.append(location+6)
+                if self.spaceEmpty(location-8) and self.isValidLocation(location-8):
+                    listMoves.append(location-8)
 
-       # if (self.board.get(location) == 'D'):
+            elif location % 7 == 1:
+                if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
+                    listMoves.append(location+1)
+                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
+                    listMoves.append(location-7)
+                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
+                    listMoves.append(location+7)
+                if self.spaceEmpty(location-6) and self.isValidLocation(location-6):
+                    listMoves.append(location-6)
+                if self.spaceEmpty(location+8) and self.isValidLocation(location+8):
+                    listMoves.append(location+8)
+            else:
+                if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
+                    listMoves.append(location-1)
+                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
+                    listMoves.append(location-7)
+                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
+                    listMoves.append(location+7)
+                if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
+                    listMoves.append(location+1)
+                if self.spaceEmpty(location-6) and self.isValidLocation(location-6):
+                    listMoves.append(location-6)
+                if self.spaceEmpty(location+8) and self.isValidLocation(location+8):
+                    listMoves.append(location+8)
+                if self.spaceEmpty(location+6) and self.isValidLocation(location+6):
+                    listMoves.append(location+6)
+                if self.spaceEmpty(location-8) and self.isValidLocation(location-8):
+                    listMoves.append(location-8)
+
+        if self.board.get(location) == '-':
+            print("there is no piece on this space")
 
         return listMoves
 
@@ -185,5 +280,5 @@ testArrayBoardClass(classArray)
 """
 startBoard = standardDictBoard()
 startBoard.toBoard()
-listMoves = startBoard.validMoves(7)
+listMoves = startBoard.validMoves(1)
 print(listMoves)
