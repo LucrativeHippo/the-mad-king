@@ -7,11 +7,16 @@ class MyTestObject:
         self.p1 = True
         self.isKing = False
         assert self.p1 or not self.isKing
-class standardDictBoard:
+
+
+class StandardDictBoard:
     def __init__(self):
-        self.board = {1: 'D', 2: '-', 3: '-', 4: 'G', 5: '-', 6: '-', 7: 'D',
-                     8: '-', 9: '-', 10: 'G', 11: 'K', 12: 'G', 13: '-', 14: '-',
-                     15: '-', 16: '-', 17: '-', 18: 'G', 19: '-', 20: '-', 21: '-',
+        self.numKings = 1
+        self.numDragons = 5
+        self.numGuards = 3
+        self.board = {1: 'D', 2: '-', 3: '-', 4: 'K', 5: '-', 6: '-', 7: 'D',
+                     8: '-', 9: '-', 10: 'G', 11: 'G', 12: 'G', 13: '-', 14: '-',
+                     15: '-', 16: '-', 17: '-', 18: '-', 19: '-', 20: '-', 21: '-',
                      22: '-', 23: '-', 24: '-', 25: '-', 26: '-', 27: '-', 28: '-',
                      29: '-', 30: '-', 31: '-', 32: '-', 33: '-', 34: '-', 35: '-',
                      36: '-', 37: 'D', 38: '-', 39: 'D', 40: '-', 41: 'D', 42: '-',
@@ -176,6 +181,12 @@ class standardDictBoard:
 
         return listMoves
 
+    def terminalState(self, kingpos):
+        if self.numDragons <= 2 and self.numGuards > 0:
+            return True  # might return 1000
+        if self.numGuards == 0 and self.numDragons > 2:
+            return True  # must check if king has clear path to end, might return -1000
+        # check if king captured
 
 class dictBoard:
     def __init__(self):
@@ -278,7 +289,7 @@ testArrayBoard(varArray)
 print("\nClass defined array:")
 testArrayBoardClass(classArray)
 """
-startBoard = standardDictBoard()
+startBoard = StandardDictBoard()
 startBoard.toBoard()
 listMoves = startBoard.validMoves(1)
 print(listMoves)
