@@ -1,14 +1,15 @@
 from time import time
 from random import randrange
+import unittest
 from Position import Pos
+import sys
 
 HEIGHT = 7
 WIDTH = 7
 
 
-class ErrIllegalMove(Exception):
+class IllegalMoveError(Exception):
     pass
-
 
 class MyTestObject:
     def __init__(self):
@@ -51,6 +52,12 @@ class dictBoard:
             rStr += "\n"
         rStr += "\n"
         return rStr
+
+    def get(self,key):
+        return self.board.get(key)
+
+    def set(self,key,value):
+        self.board[key] = value
 
 
 def legal_moves(board,piecePos):
@@ -113,17 +120,20 @@ def move(board, piecePos, newPos):
 
 # Modify this for use with the get_legal_moves function
 def this_one(bClass, piecePos, newPos):
+    if bClass.board.get(piecePos) == None:
+        raise IllegalMoveError("Invalid Piece")
+
     l = get_legal_moves(bClass.board,piecePos)
 
     # **********************************************Use index
     b = dictBoard()
     b.board = bClass.board.copy()
+    if (l.count(newPos) <= 0):
+        raise IllegalMoveError("NOOOOOOO! An illegal move!")
+
     # TODO Count is terrible use index
-    if l.count(newPos) > 0:
-        move(b.board,piecePos,newPos)
-        return b
-    else:
-        raise ErrIllegalMove("NOOOOOOO! An illegal move!")
+    move(b.board,piecePos,newPos)
+    return b
 
 
 # TODO: add function to make board list, for all pieces whose turn it is
@@ -131,12 +141,43 @@ def this_one(bClass, piecePos, newPos):
 
 
 
+class BoardTests(unittest.TestCase):
+    foo = dictBoard()
+    foo.start_state()
+    board = foo.board
+
+    def test_board_init(self):
+        tbAlpha = dictBoard().board
+        self.assertEqual(tbAlpha, {}, "Board is not a dictionary.")
+        self.assertEqual(len(tbAlpha), 0, "Board is not empty on init.")
+        self.assertIsNone(tbAlpha.get(Pos(6,0)))
+
+    def test_start_board(self):
+        self.assertEqual(self.board.get(Pos(6,0)), 'D')
+        self.assertIsNone(self.board.get(Pos(5,0)))
+        self.assertEqual(self.board.get(Pos(6,3)),'K')
+
+    def test_move_board(self):
+        with self.assertRaises(IllegalMoveError):
+            this_one(self.foo,Pos(6,3),Pos(6,6)) # legal piece, illegal move
+        with self.assertRaises(IllegalMoveError):
+            this_one(self.foo,Pos(6,5),Pos(5,5)) # illegal piece, legal move
+        print(self.foo)
+        self.assertNotEqual(self.foo.get(Pos(6,4)),'K')
+        self.foo = this_one(self.foo,Pos(6,3),Pos(6,4))
+        print(self.foo)
+        self.assertEqual(self.foo.get(Pos(6,4)),'K')
+        self.assertNotEqual(self.foo.get(Pos(6,3)),'K')
+
+
+if __name__ == '__main__':
+    unittest.main
 
 b = dictBoard()
 b.start_state()
 print(b)
 print(get_legal_moves(b.board,Pos(6,3)))
-print(this_one(b,Pos(6,3),Pos(6,6)))
+print(this_one(b,Pos(6,3),Pos(6,4)))
 
 
 
