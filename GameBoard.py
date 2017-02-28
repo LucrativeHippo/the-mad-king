@@ -2,6 +2,11 @@ from time import time
 from random import randrange
 from Position import Pos
 
+KING_SQUIRTLE_SQUAD = True
+PUFFS_MAGICAL_DRAGON_SQUAD = False
+WIDTH = 7
+HEIGHT = 7
+
 class MyTestObject:
     def __init__(self):
         self.p1 = True
@@ -14,14 +19,17 @@ class dictBoard:
         self.board = {}
 
     def start_state(self):
+        self.numDragons = 5
+        self.numGuards = 3
+        self.turn = True
         self.board[Pos(6,0)] = 'D'
         self.board[Pos(6,6)] = 'D'
         self.board[Pos(6,3)] = 'K'
         for i in range(2,5):
             self.board[Pos(5,i)] = 'G'
         self.board[Pos(0,3)] = 'D'
-        self.board[Pos(1,2)] = 'D'
-        self.board[Pos(1,4)] = 'D'
+        self.board[Pos(1,1)] = 'D'
+        self.board[Pos(1,5)] = 'D'
 
     def __copy__(self):
         rv = dictBoard()
@@ -115,6 +123,20 @@ def this_one(bClass, piecePos, newPos):
 
 # TODO: add function to make board list, for all pieces whose turn it is
 
+def teamMoves(bClass):
+    potentialMoves = []
+    temp = bClass.board.items()
+    if bClass.turn == KING_SQUIRTLE_SQUAD:
+        for i in temp:
+            if i[1] == 'G' or i[1] == 'K':
+                potentialMoves.append(i)
+    else:
+        for i in temp:
+            if i[1] == 'D':
+                potentialMoves.append(i)
+    print(potentialMoves)
+
+
 
 
 
@@ -124,6 +146,7 @@ b.start_state()
 print(b)
 print(get_legal_moves(b.board,Pos(6,0)))
 print(this_one(b,Pos(6,3),Pos(6,4)))
+teamMoves(b)
 
 
 
