@@ -2,11 +2,20 @@ from time import time
 from random import randrange
 from Position import Pos
 
+HEIGHT = 7
+WIDTH = 7
+
+
+class ErrIllegalMove(Exception):
+    pass
+
+
 class MyTestObject:
     def __init__(self):
         self.p1 = True
         self.isKing = False
         assert self.p1 or not self.isKing
+
 
 # TODO redesign this class for using less space
 class dictBoard:
@@ -33,9 +42,9 @@ class dictBoard:
 
     def __repr__(self):
         rStr = ""
-        for x in range(0, 7):
-            for y in range(0, 7):
-                temp = self.board.get(Pos(6-x, y))
+        for x in range(0, HEIGHT):
+            for y in range(0, WIDTH):
+                temp = self.board.get(Pos(HEIGHT-1-x, y))
                 if temp is None:
                     temp = '-'
                 rStr += temp +" "
@@ -48,7 +57,7 @@ def legal_moves(board,piecePos):
     """
     Takes a piece position on the board, returns all legal moves
     :param board:
-    :type board: dict()
+    :type board: {"Pos":Char}
     :param piecePos:
     :type piecePos: Pos
     :return: List of legal moves for a piece
@@ -60,7 +69,8 @@ def legal_moves(board,piecePos):
     rList.append((piecePos+Pos(-1,0)))
     rList.append((piecePos+Pos(0,1)))
     rList.append((piecePos+Pos(0,-1)))
-    #if King
+    # if King
+    # TODO better way to do this
     if board.get(piecePos) == 'K':
         kList = []
         temp = 0
@@ -83,13 +93,15 @@ def legal_moves(board,piecePos):
         rList.append((piecePos+Pos(-1,-1)))
     return rList
 
+# TODO shrink get_legal_moves to legal_moves and call this in legal_moves
+
 
 def get_legal_moves(board,piecePos):
     move_list = legal_moves(board,piecePos)
     rList = list()
     while len(move_list)>0:
         x = move_list.pop()
-        if(x.x>=0) & (x.y>=0) & (x.x<7) & (x.y<7) & (board.get(x) is None):
+        if(x.x>=0) & (x.y>=0) & (x.x<HEIGHT) & (x.y<WIDTH) & (board.get(x) is None):
             rList.append(x)
     return rList
 
@@ -106,11 +118,12 @@ def this_one(bClass, piecePos, newPos):
     # **********************************************Use index
     b = dictBoard()
     b.board = bClass.board.copy()
-    if l.count(newPos)>0:
+    # TODO Count is terrible use index
+    if l.count(newPos) > 0:
         move(b.board,piecePos,newPos)
         return b
     else:
-        print("NOOOOOOO! An illegal move!")
+        raise ErrIllegalMove("NOOOOOOO! An illegal move!")
 
 
 # TODO: add function to make board list, for all pieces whose turn it is
@@ -122,8 +135,8 @@ def this_one(bClass, piecePos, newPos):
 b = dictBoard()
 b.start_state()
 print(b)
-print(get_legal_moves(b.board,Pos(6,0)))
-print(this_one(b,Pos(6,3),Pos(6,4)))
+print(get_legal_moves(b.board,Pos(6,3)))
+print(this_one(b,Pos(6,3),Pos(6,6)))
 
 
 
