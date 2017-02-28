@@ -35,7 +35,7 @@ class dictBoard:
         rStr = ""
         for x in range(0, 7):
             for y in range(0, 7):
-                temp = self.board.get(Pos(x, y))
+                temp = self.board.get(Pos(6-x, y))
                 if temp is None:
                     temp = '-'
                 rStr += temp +" "
@@ -48,7 +48,7 @@ def legal_moves(board,piecePos):
     """
     Takes a piece position on the board, returns all legal moves
     :param board:
-    :type board: dictBoard
+    :type board: dict()
     :param piecePos:
     :type piecePos: Pos
     :return: List of legal moves for a piece
@@ -76,6 +76,11 @@ def legal_moves(board,piecePos):
                     kList.append(x+Pos(0,-1))
             temp += 1
         rList.extend(kList)
+    elif board.get(piecePos) == 'D':
+        rList.append((piecePos+Pos(1,1)))
+        rList.append((piecePos+Pos(1,-1)))
+        rList.append((piecePos+Pos(-1,1)))
+        rList.append((piecePos+Pos(-1,-1)))
     return rList
 
 
@@ -117,6 +122,7 @@ def this_one(bClass, piecePos, newPos):
 b = dictBoard()
 b.start_state()
 print(b)
+print(get_legal_moves(b.board,Pos(6,0)))
 print(this_one(b,Pos(6,3),Pos(6,4)))
 
 
