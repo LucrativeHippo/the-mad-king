@@ -1,187 +1,135 @@
 from time import time
 from random import randrange
-
+from Position import Pos
 
 class MyTestObject:
     def __init__(self):
         self.p1 = True
         self.isKing = False
         assert self.p1 or not self.isKing
-class standardDictBoard:
-    def __init__(self):
-        self.board = {1: 'D', 2: '-', 3: '-', 4: 'G', 5: '-', 6: '-', 7: 'D',
-                     8: '-', 9: '-', 10: 'G', 11: 'K', 12: 'G', 13: '-', 14: '-',
-                     15: '-', 16: '-', 17: '-', 18: 'G', 19: '-', 20: '-', 21: '-',
-                     22: '-', 23: '-', 24: '-', 25: '-', 26: '-', 27: '-', 28: '-',
-                     29: '-', 30: '-', 31: '-', 32: '-', 33: '-', 34: '-', 35: '-',
-                     36: '-', 37: 'D', 38: '-', 39: 'D', 40: '-', 41: 'D', 42: '-',
-                     43: '-', 44: '-', 45: '-', 46: '-', 47: '-', 48: '-', 49: '-'}
 
-    def toBoard(self):
-        for key in range(1,8):
-            print(self.board.get(key), end='')
-        print("")
-        for key in range(8,15):
-            print(self.board.get(key), end='')
-        print("")
-        for key in range(15,22):
-            print(self.board.get(key), end='')
-        print("")
-        for key in range(22,29):
-            print(self.board.get(key), end='')
-        print("")
-        for key in range(29,36):
-            print(self.board.get(key), end='')
-        print("")
-        for key in range(36,43):
-            print(self.board.get(key), end='')
-        print("")
-        for key in range(43,50):
-            print(self.board.get(key), end='')
-
-    def isValidLocation(self, location):
-        return (location > 0 )and(location < 50)
-
-    def spaceEmpty(self, location):
-        return self.board.get(location) == '-'
-
-    def validMoves(self, location):
-        listMoves = list()
-        if self.board.get(location) == 'K':
-            if location % 7 == 0:
-                if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
-                    listMoves.append(location-1)
-                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
-                    listMoves.append(location-7)
-                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
-                    listMoves.append(location+7)
-                if self.board.get(location-1)\
-                        == 'G'and self.spaceEmpty(location-2)and self.isValidLocation(location-2):
-                    listMoves.append(location - 2)
-                if self.board.get(location-7)\
-                        == 'G'and self.spaceEmpty(location-14)and self.isValidLocation(location-14):
-                    listMoves.append(location - 14)
-                if self.board.get(location+7)\
-                        == 'G'and self.spaceEmpty(location+14)and self.isValidLocation(location+14):
-                    listMoves.append(location + 14)
-
-            elif location % 7 == 1:
-                if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
-                    listMoves.append(location+1)
-                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
-                    listMoves.append(location-7)
-                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
-                    listMoves.append(location+7)
-                if self.board.get(location+1) \
-                        == 'G'and self.spaceEmpty(location+2)and self.isValidLocation(location+2):
-                    listMoves.append(location + 2)
-                if self.board.get(location-7) \
-                        == 'G'and self.spaceEmpty(location-14)and self.isValidLocation(location-14):
-                    listMoves.append(location - 14)
-                if self.board.get(location+7) \
-                        == 'G'and self.spaceEmpty(location+14)and self.isValidLocation(location+14):
-                    listMoves.append(location + 14)
-            else:
-                if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
-                    listMoves.append(location-1)
-                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
-                    listMoves.append(location-7)
-                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
-                    listMoves.append(location+7)
-                if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
-                    listMoves.append(location+1)
-                if self.board.get(location-1) \
-                        == 'G'and self.spaceEmpty(location-2)and self.isValidLocation(location-2):
-                    listMoves.append(location - 2)
-                if self.board.get(location-7)\
-                        == 'G'and self.spaceEmpty(location-14)and self.isValidLocation(location-14):
-                    listMoves.append(location - 14)
-                if self.board.get(location+7)\
-                        == 'G'and self.spaceEmpty(location+14)and self.isValidLocation(location+14):
-                    listMoves.append(location + 14)
-                if self.board.get(location+1)\
-                        == 'G'and self.spaceEmpty(location+2)and self.isValidLocation(location+2):
-                    listMoves.append(location + 2)
-
-        if self.board.get(location) == 'G':
-            if location % 7 == 0:
-                if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
-                    listMoves.append(location-1)
-                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
-                    listMoves.append(location-7)
-                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
-                    listMoves.append(location+7)
-
-            elif location % 7 == 1:
-                if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
-                    listMoves.append(location+1)
-                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
-                    listMoves.append(location-7)
-                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
-                    listMoves.append(location+7)
-            else:
-                if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
-                    listMoves.append(location-1)
-                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
-                    listMoves.append(location-7)
-                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
-                    listMoves.append(location+7)
-                if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
-                    listMoves.append(location+1)
-
-        if self.board.get(location) == 'D':
-            if location % 7 == 0:
-                if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
-                    listMoves.append(location-1)
-                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
-                    listMoves.append(location-7)
-                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
-                    listMoves.append(location+7)
-                if self.spaceEmpty(location+6) and self.isValidLocation(location+6):
-                    listMoves.append(location+6)
-                if self.spaceEmpty(location-8) and self.isValidLocation(location-8):
-                    listMoves.append(location-8)
-
-            elif location % 7 == 1:
-                if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
-                    listMoves.append(location+1)
-                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
-                    listMoves.append(location-7)
-                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
-                    listMoves.append(location+7)
-                if self.spaceEmpty(location-6) and self.isValidLocation(location-6):
-                    listMoves.append(location-6)
-                if self.spaceEmpty(location+8) and self.isValidLocation(location+8):
-                    listMoves.append(location+8)
-            else:
-                if self.spaceEmpty(location-1)and self.isValidLocation(location-1):
-                    listMoves.append(location-1)
-                if self.spaceEmpty(location-7)and self.isValidLocation(location-7):
-                    listMoves.append(location-7)
-                if self.spaceEmpty(location+7) and self.isValidLocation(location+7):
-                    listMoves.append(location+7)
-                if self.spaceEmpty(location+1)and self.isValidLocation(location+1):
-                    listMoves.append(location+1)
-                if self.spaceEmpty(location-6) and self.isValidLocation(location-6):
-                    listMoves.append(location-6)
-                if self.spaceEmpty(location+8) and self.isValidLocation(location+8):
-                    listMoves.append(location+8)
-                if self.spaceEmpty(location+6) and self.isValidLocation(location+6):
-                    listMoves.append(location+6)
-                if self.spaceEmpty(location-8) and self.isValidLocation(location-8):
-                    listMoves.append(location-8)
-
-        if self.board.get(location) == '-':
-            print("there is no piece on this space")
-
-        return listMoves
-
-
+# TODO redesign this class for using less space
 class dictBoard:
     def __init__(self):
-        self.board={}
+        self.board = {}
+
+    def start_state(self):
+        self.board[Pos(6,0)] = 'D'
+        self.board[Pos(6,6)] = 'D'
+        self.board[Pos(6,3)] = 'K'
+        for i in range(2,5):
+            self.board[Pos(5,i)] = 'G'
+        self.board[Pos(0,3)] = 'D'
+        self.board[Pos(1,2)] = 'D'
+        self.board[Pos(1,4)] = 'D'
+
+    def __copy__(self):
+        rv = dictBoard()
+        rv.board = self.board.copy()
+        return rv
+
+    def copy(self):
+        return self.__copy__()
+
+    def __repr__(self):
+        rStr = ""
+        for x in range(0, 7):
+            for y in range(0, 7):
+                temp = self.board.get(Pos(6-x, y))
+                if temp is None:
+                    temp = '-'
+                rStr += temp +" "
+            rStr += "\n"
+        rStr += "\n"
+        return rStr
 
 
+def legal_moves(board,piecePos):
+    """
+    Takes a piece position on the board, returns all legal moves
+    :param board:
+    :type board: dict()
+    :param piecePos:
+    :type piecePos: Pos
+    :return: List of legal moves for a piece
+    :rtype: [Pos]
+    """
+    rList = []
+    #legal move for all pieces
+    rList.append((piecePos+Pos(1,0)))
+    rList.append((piecePos+Pos(-1,0)))
+    rList.append((piecePos+Pos(0,1)))
+    rList.append((piecePos+Pos(0,-1)))
+    #if King
+    if board.get(piecePos) == 'K':
+        kList = []
+        temp = 0
+        for x in rList:
+            if board.get(x) == 'G':
+                if temp == 0:
+                    kList.append((x+Pos(1,0)))
+                elif temp == 1:
+                    kList.append(x+Pos(-1,0))
+                elif temp == 2:
+                    kList.append(x+Pos(0,1))
+                else:
+                    kList.append(x+Pos(0,-1))
+            temp += 1
+        rList.extend(kList)
+    elif board.get(piecePos) == 'D':
+        rList.append((piecePos+Pos(1,1)))
+        rList.append((piecePos+Pos(1,-1)))
+        rList.append((piecePos+Pos(-1,1)))
+        rList.append((piecePos+Pos(-1,-1)))
+    return rList
+
+
+def get_legal_moves(board,piecePos):
+    move_list = legal_moves(board,piecePos)
+    rList = list()
+    while len(move_list)>0:
+        x = move_list.pop()
+        if(x.x>=0) & (x.y>=0) & (x.x<7) & (x.y<7) & (board.get(x) is None):
+            rList.append(x)
+    return rList
+
+
+def move(board, piecePos, newPos):
+    temp = board.pop(piecePos)
+    board[newPos] = temp
+
+
+# Modify this for use with the get_legal_moves function
+def this_one(bClass, piecePos, newPos):
+    l = get_legal_moves(bClass.board,piecePos)
+
+    # **********************************************Use index
+    b = dictBoard()
+    b.board = bClass.board.copy()
+    if l.count(newPos)>0:
+        move(b.board,piecePos,newPos)
+        return b
+    else:
+        print("NOOOOOOO! An illegal move!")
+
+
+# TODO: add function to make board list, for all pieces whose turn it is
+
+
+
+
+
+b = dictBoard()
+b.start_state()
+print(b)
+print(get_legal_moves(b.board,Pos(6,0)))
+print(this_one(b,Pos(6,3),Pos(6,4)))
+
+
+
+
+#Tests
+"""
 class arrayBoard:
     def __init__(self):
         self.board = [[None for x in range(5)] for y in range(5)]
@@ -268,7 +216,6 @@ varArray = [[None for x in range(5)] for y in range(5)]
 classBoard = dictBoard()
 classArray = arrayBoard()
 print("Variable defined dictionary:")
-"""
 testDictBoard(varDict)
 print("\nClass defined dictionary:")
 testDictBoardClass(classBoard)
@@ -278,7 +225,3 @@ testArrayBoard(varArray)
 print("\nClass defined array:")
 testArrayBoardClass(classArray)
 """
-startBoard = standardDictBoard()
-startBoard.toBoard()
-listMoves = startBoard.validMoves(1)
-print(listMoves)
