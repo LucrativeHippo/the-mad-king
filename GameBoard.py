@@ -152,11 +152,11 @@ def teamMoves(bClass):
     if bClass.turn == KING_SQUIRTLE_SQUAD:
         for i in temp:
             if i[1] == 'G' or i[1] == 'K':
-                potentialMoves.append(i)
+                potentialMoves.append(i[0])
     else:
         for i in temp:
             if i[1] == 'D':
-                potentialMoves.append(i)
+                potentialMoves.append(i[0])
     print(potentialMoves)
 
 
