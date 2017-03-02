@@ -1,5 +1,5 @@
 def boardValue(board):
-    if board.isTerminal():
+    if board.isTerminal:
         raise Exception()
     dragonCount = 0
     gaurdCount = 0

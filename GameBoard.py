@@ -4,7 +4,11 @@ import unittest
 from Position import Pos
 import sys
 
+
 class IllegalMoveError(Exception):
+    pass
+
+class NotDoneError(Exception):
     pass
 
 KING_SQUIRTLE_SQUAD = True
@@ -13,6 +17,7 @@ WIDTH = 7
 HEIGHT = 7
 WIN_VALUE = 1000
 WIN_FOR = KING_SQUIRTLE_SQUAD
+
 
 class MyTestObject:
     def __init__(self):
@@ -25,7 +30,7 @@ class MyTestObject:
 class dictBoard:
     def __init__(self, state, player=PUFFS_MAGICAL_DRAGON_SQUAD):
         """
-
+        Board dictionary with minimax functions
         :param state:
         :type state: dict
         :param player:
@@ -33,6 +38,7 @@ class dictBoard:
 
         self.board = {}
         if state == None:
+            # This code runs only once, more efficient way to write it but shouldn't matter
             self.board[Pos(6,0)] = 'D'
             self.board[Pos(6,6)] = 'D'
             self.board[Pos(6,3)] = 'K'
@@ -46,7 +52,7 @@ class dictBoard:
 
         self.whoseTurn = player
         self.cachedWin = False
-        self.cachsedWinner = None
+        self.cachedWinner = None
 
     def __copy__(self):
         rv = dictBoard()
@@ -57,29 +63,82 @@ class dictBoard:
         return self.__copy__()
 
     def __repr__(self):
-        rStr = ""
+        r_str = ""
         for x in range(0, HEIGHT):
             for y in range(0, WIDTH):
                 temp = self.board.get(Pos(HEIGHT-1-x, y))
                 if temp is None:
                     temp = '-'
-                rStr += temp +" "
-            rStr += "\n"
-        rStr += "\n"
-        return rStr
+                r_str += temp + " "
+            r_str += "\n"
+        r_str += "\n"
+        return r_str
 
     def move(self, piecePos, newPos):
         temp = self.board.pop(piecePos)
         self.board[newPos] = temp
 
-    def get(self,key):
+    def get(self, key):
         return self.board.get(key)
 
-    def set(self,key,value):
+    def set(self, key, value):
+        """
+        Sets value in board dictionary
+        :param key: Board position
+        :type key: Position.Pos
+        :param value: 'K' or 'D' or 'G' or None
+        :type value: char
+        """
         self.board[key] = value
 
-    def isTerminal (self):
-        return self.winFor(KING_SQUIRTLE_SQUAD) or self.winFor(PUFFS_MAGICAL_DRAGON_SQUAD) or (len(self.successors()) == 0)
+    @property
+    def get_king_pos(self):
+        """
+
+        :return: Position of king
+        :rtype: Pos
+        """
+        pieces = self.board.items()
+        for key, value in pieces:
+            if value == 'K':
+                return key
+
+    def winFor(self, player):
+        """
+        Returns end value of board,
+        :param player:
+        :type player: bool
+        :return: Win value, +1000 if player, -1000 if not player, 0 if tie
+        :rtype: int
+        """
+        if self.cachedWin is False:
+            won = False
+            king_pos = self.get_king_pos
+            assert king_pos is not None
+
+            if player is KING_SQUIRTLE_SQUAD:
+                if king_pos[0] == 0:
+                    won = True
+            elif player is PUFFS_MAGICAL_DRAGON_SQUAD:
+                raise NotDoneError()
+                # TODO check if king is captured
+                # TODO cehck if tie
+                    # case 1: two or less drangon king wins
+                    # case 2: three or more drangons and no gaurds, dragons win
+            if(won):
+                self.cachedWin = True
+                self.cachedWinner = player
+                return True
+            else:
+                return False
+        else:
+            return player == self.cachedWinner
+
+    @property
+    def isTerminal(self):
+        return self.winFor(KING_SQUIRTLE_SQUAD) \
+               or self.winFor(PUFFS_MAGICAL_DRAGON_SQUAD) \
+               or (len(self.successors()) == 0)
 
     def legal_moves(self, piecePos):
         """
@@ -122,7 +181,14 @@ class dictBoard:
         return rList
 
     def get_legal_moves(self, piecePos):
-        move_list = legal_moves(self.board, piecePos)
+        """
+        Creates list of legal moves from a piece
+        :param piecePos: position of a piece
+        :type piecePos: Position.Pos
+        :return: List of legal moves for this piece
+        :rtype: [Position.Pos]
+        """
+        move_list = self.legal_moves(piecePos)
         rList = list()
         while len(move_list) > 0:
             x = move_list.pop()
@@ -138,79 +204,39 @@ class dictBoard:
     # TODO check if a guard is captured
 
     def this_one(self, piecePos, newPos):
+        """
 
+        :param piecePos: Piece to be moved
+        :type piecePos: Pos
+        :param newPos: Position to move to
+        :type newPos: Pos
+        :return:
+        :rtype: [(dictBoard, Pos, Pos)]
+        """
         # TODO check whose turn and piece
-        # TODO if king or gurads can capture a drangon
+        # TODO if king or guards can capture a dragon
 
-        if self.board.get(piecePos) == None:
+        if self.board.get(piecePos) is None:
             raise IllegalMoveError("Invalid Piece")
 
-        l = get_legal_moves(self.board, piecePos)
+        l = self.get_legal_moves(piecePos)
 
         # **********************************************Use index
-        b = dictBoard()
-        b.board = self.board.copy()
-        if (l.count(newPos) <= 0):
+        r_board = dictBoard()
+        r_board.board = self.board.copy()
+        if l.count(newPos) <= 0:
             raise IllegalMoveError("NOOOOOOO! An illegal move!")
 
         # TODO Count is terrible use index
-        move(b.board,piecePos,newPos)
-        return (b, piecePos, newPos)
-
-    def successors(self):
-        rList = []
-        for p in self.teamPieces():
-            for m in self.get_legal_moves(p):
-                rList.append(self.this_one(p,m))
-        return rList
-
-    def winFor(self, player):
-        if(self.cachedWin == False):
-            won = False
-            King_pos = None
-            for key, value in pieces:
-                if value == 'K':
-                    King_pos = key
-            assert King_pos != None
-
-            if(player==KING_SQUIRTLE_SQUAD):
-                pieces = self.board.items()
-                if King_pos[0] == 0:
-                    won = True
-            elif(player==PUFFS_MAGICAL_DRAGON_SQUAD):
-                raise Exception()
-                # TODO check if king is captured
-                # TODO cehck if tie
-                    # case 1: two or less drangon king wins
-                    # case 2: three or more drangons and no gaurds, dragons win
-            if(won):
-                self.cachedWin = True
-                self.cachsedWinner = player
-                return True
-            else:
-                return False
-        else:
-            return player == self.cachsedWinner
-
-
-    def utility(self):
-        if(self.winFor(WIN_FOR)):
-            return WIN_VALUE
-        elif(self.winFor(not WIN_FOR)):
-            return -WIN_VALUE
-        else:
-            return 0
-
-
-
-
-
-
-
-
-#TODO: add function to make board list, for all pieces whose turn it is
+        self.move(r_board.board,piecePos,newPos)
+        return r_board, piecePos, newPos
 
     def teamPieces(self):
+        """
+
+        :return: list of all pieces of current players
+        :rtype: [Pos]
+        """
         potentialMoves = []
         temp = self.board.items()
         if self.whoseTurn == KING_SQUIRTLE_SQUAD:
@@ -223,6 +249,35 @@ class dictBoard:
                     potentialMoves.append(i)
 
         return potentialMoves
+
+    def successors(self):
+        """
+
+        :return: list of all moves for the current players turn
+        :rtype: [dictBoard, Pos, Pos]
+        """
+        rList = []
+        for p in self.teamPieces():
+            for m in self.get_legal_moves(p):
+                rList.append(self.this_one(p, m))
+        return rList
+
+    def utility(self):
+        if self.winFor(WIN_FOR) :
+            return WIN_VALUE
+        else:
+            return -WIN_VALUE
+
+
+
+
+
+
+
+
+#TODO: add function to make board list, for all pieces whose turn it is
+
+
 
 
 class BoardTests(unittest.TestCase):
@@ -248,7 +303,7 @@ class BoardTests(unittest.TestCase):
             this_one(self.foo,Pos(6,5),Pos(5,5)) # illegal piece, legal move
         print(self.foo)
         self.assertNotEqual(self.foo.get(Pos(6,4)),'K')
-        self.foo = this_one(self.foo,Pos(6,3),Pos(6,4))
+        self.foo = self.foo.this_one(Pos(6,3),Pos(6,4))
         print(self.foo)
         self.assertEqual(self.foo.get(Pos(6,4)),'K')
         self.assertNotEqual(self.foo.get(Pos(6,3)),'K')
@@ -260,9 +315,9 @@ if __name__ == '__main__':
 b = dictBoard()
 b.start_state()
 print(b)
-print(get_legal_moves(b.board,Pos(6,3)))
-print(this_one(b,Pos(6,3),Pos(6,4)))
-teamMoves(b)
+print(b.get_legal_moves(b.board,Pos(6,3)))
+print(b.this_one(b,Pos(6,3),Pos(6,4)))
+b.teamMoves(b)
 
 
 
@@ -364,3 +419,4 @@ testArrayBoard(varArray)
 print("\nClass defined array:")
 testArrayBoardClass(classArray)
 """
+b.utility()
