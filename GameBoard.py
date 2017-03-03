@@ -263,7 +263,7 @@ class dictBoard:
         return rList
 
     def utility(self):
-        if self.winFor(WIN_FOR) :
+        if self.winFor(WIN_FOR):
             return WIN_VALUE
         else:
             return -WIN_VALUE
@@ -298,9 +298,9 @@ class BoardTests(unittest.TestCase):
 
     def test_move_board(self):
         with self.assertRaises(IllegalMoveError):
-            this_one(self.foo,Pos(6,3),Pos(6,6)) # legal piece, illegal move
+            self.this_one(Pos(6,3),Pos(6,6)) # legal piece, illegal move
         with self.assertRaises(IllegalMoveError):
-            this_one(self.foo,Pos(6,5),Pos(5,5)) # illegal piece, legal move
+            self.this_one(Pos(6,5),Pos(5,5)) # illegal piece, legal move
         print(self.foo)
         self.assertNotEqual(self.foo.get(Pos(6,4)),'K')
         self.foo = self.foo.this_one(Pos(6,3),Pos(6,4))
