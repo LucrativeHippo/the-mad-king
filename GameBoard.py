@@ -292,7 +292,6 @@ class BoardTests(unittest.TestCase):
         board = foo.board
         self.assertEqual(board.get(Pos(6,0)), 'D')
         self.assertIsNone(board.get(Pos(5,0)))
-        print(board)
         self.assertEqual(board.get(Pos(6,3)),'K')
 
     def test_move_board(self):
@@ -302,10 +301,8 @@ class BoardTests(unittest.TestCase):
             foo.this_one(Pos(6,3),Pos(6,6)) # legal piece, illegal move
         with self.assertRaises(IllegalMoveError):
             foo.this_one(Pos(6,5),Pos(5,5)) # illegal piece, legal move
-        print(foo)
         self.assertNotEqual(foo.get(Pos(6,4)),'K')
         foo2 = foo.this_one(Pos(6,3),Pos(6,4))[0]
-        print(foo2)
         self.assertEqual(foo2.get(Pos(6,4)),'K')
         self.assertNotEqual(foo2.get(Pos(6,3)),'K')
 
@@ -313,12 +310,14 @@ class BoardTests(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main
 
+"""
 b = dictBoard(None)
 print(b)
 print(b.get_legal_moves(Pos(6,3)))
-#print(b.this_one(Pos(6,3),Pos(6,4)))
+print(b.this_one(Pos(6,3),Pos(6,4))[0])
 b.teamPieces()
-
+b.utility()
+"""
 
 
 
@@ -419,4 +418,3 @@ testArrayBoard(varArray)
 print("\nClass defined array:")
 testArrayBoardClass(classArray)
 """
-b.utility()
