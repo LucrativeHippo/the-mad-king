@@ -117,7 +117,7 @@ class dictBoard:
             assert king_pos is not None
 
             if player is KING_SQUIRTLE_SQUAD:
-                if king_pos[0] == 0:
+                if king_pos.x == 0:
                     won = True
             elif player is PUFFS_MAGICAL_DRAGON_SQUAD:
                 raise NotDoneError()
@@ -222,13 +222,12 @@ class dictBoard:
         l = self.get_legal_moves(piecePos)
 
         # **********************************************Use index
-        r_board = dictBoard()
-        r_board.board = self.board.copy()
+        r_board = dictBoard(self.board.copy())
         if l.count(newPos) <= 0:
             raise IllegalMoveError("NOOOOOOO! An illegal move!")
 
         # TODO Count is terrible use index
-        self.move(r_board.board,piecePos,newPos)
+        r_board.move(piecePos,newPos)
         return r_board, piecePos, newPos
 
     def teamPieces(self):
@@ -281,43 +280,44 @@ class dictBoard:
 
 
 class BoardTests(unittest.TestCase):
-    foo = dictBoard()
-    foo.start_state()
-    board = foo.board
 
     def test_board_init(self):
-        tbAlpha = dictBoard().board
+        tbAlpha = dictBoard({}).board
         self.assertEqual(tbAlpha, {}, "Board is not a dictionary.")
         self.assertEqual(len(tbAlpha), 0, "Board is not empty on init.")
         self.assertIsNone(tbAlpha.get(Pos(6,0)))
 
     def test_start_board(self):
-        self.assertEqual(self.board.get(Pos(6,0)), 'D')
-        self.assertIsNone(self.board.get(Pos(5,0)))
-        self.assertEqual(self.board.get(Pos(6,3)),'K')
+        foo = dictBoard(None)
+        board = foo.board
+        self.assertEqual(board.get(Pos(6,0)), 'D')
+        self.assertIsNone(board.get(Pos(5,0)))
+        print(board)
+        self.assertEqual(board.get(Pos(6,3)),'K')
 
     def test_move_board(self):
+        foo = dictBoard(None)
+        board = foo.board
         with self.assertRaises(IllegalMoveError):
-            self.this_one(Pos(6,3),Pos(6,6)) # legal piece, illegal move
+            foo.this_one(Pos(6,3),Pos(6,6)) # legal piece, illegal move
         with self.assertRaises(IllegalMoveError):
-            self.this_one(Pos(6,5),Pos(5,5)) # illegal piece, legal move
-        print(self.foo)
-        self.assertNotEqual(self.foo.get(Pos(6,4)),'K')
-        self.foo = self.foo.this_one(Pos(6,3),Pos(6,4))
-        print(self.foo)
-        self.assertEqual(self.foo.get(Pos(6,4)),'K')
-        self.assertNotEqual(self.foo.get(Pos(6,3)),'K')
+            foo.this_one(Pos(6,5),Pos(5,5)) # illegal piece, legal move
+        print(foo)
+        self.assertNotEqual(foo.get(Pos(6,4)),'K')
+        foo2 = foo.this_one(Pos(6,3),Pos(6,4))[0]
+        print(foo2)
+        self.assertEqual(foo2.get(Pos(6,4)),'K')
+        self.assertNotEqual(foo2.get(Pos(6,3)),'K')
 
 
 if __name__ == '__main__':
     unittest.main
 
-b = dictBoard()
-b.start_state()
+b = dictBoard(None)
 print(b)
-print(b.get_legal_moves(b.board,Pos(6,3)))
-print(b.this_one(b,Pos(6,3),Pos(6,4)))
-b.teamMoves(b)
+print(b.get_legal_moves(Pos(6,3)))
+#print(b.this_one(Pos(6,3),Pos(6,4)))
+b.teamPieces()
 
 
 
