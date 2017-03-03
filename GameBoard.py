@@ -8,6 +8,7 @@ import sys
 class IllegalMoveError(Exception):
     pass
 
+
 class NotDoneError(Exception):
     pass
 
@@ -31,13 +32,14 @@ class dictBoard:
     def __init__(self, state, player=PUFFS_MAGICAL_DRAGON_SQUAD):
         """
         Board dictionary with minimax functions
+        :rtype: None
         :param state:
         :type state: dict
         :param player:
         """
 
         self.board = {}
-        if state == None:
+        if state is None:
             # This code runs only once, more efficient way to write it but shouldn't matter
             self.board[Pos(6,0)] = 'D'
             self.board[Pos(6,6)] = 'D'
@@ -75,6 +77,14 @@ class dictBoard:
         return r_str
 
     def move(self, piecePos, newPos):
+        """
+        Dumb move function. Moves any contents of piecePos to any newPos. Doesn't follow rules
+        :param piecePos: Position of piece
+        :type piecePos: Pos
+        :param newPos: Position to move to
+        :type newPos: Pos
+        :rtype: None
+        """
         temp = self.board.pop(piecePos)
         self.board[newPos] = temp
 
@@ -92,7 +102,7 @@ class dictBoard:
         self.board[key] = value
 
     @property
-    def get_king_pos(self):
+    def king_pos(self):
         """
 
         :return: Position of king
@@ -113,7 +123,7 @@ class dictBoard:
         """
         if self.cachedWin is False:
             won = False
-            king_pos = self.get_king_pos
+            king_pos = self.king_pos
             assert king_pos is not None
 
             if player is KING_SQUIRTLE_SQUAD:
@@ -134,7 +144,6 @@ class dictBoard:
         else:
             return player == self.cachedWinner
 
-    @property
     def isTerminal(self):
         return self.winFor(KING_SQUIRTLE_SQUAD) \
                or self.winFor(PUFFS_MAGICAL_DRAGON_SQUAD) \
@@ -227,7 +236,8 @@ class dictBoard:
             raise IllegalMoveError("NOOOOOOO! An illegal move!")
 
         # TODO Count is terrible use index
-        r_board.move(piecePos,newPos)
+        r_board.move(piecePos, newPos)
+        r_board.whoseTurn = not r_board.whoseTurn
         return r_board, piecePos, newPos
 
     def teamPieces(self):
