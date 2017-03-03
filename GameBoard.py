@@ -76,12 +76,12 @@ class dictBoard:
         r_str += "\n"
         return r_str
 
-    def move(self, piecePos, newPos):
+    def __move(self, piecePos, newPos):
         """
-        Dumb move function. Moves any contents of piecePos to any newPos. Doesn't follow rules
+        Dumb __move function. Moves any contents of piecePos to any newPos. Doesn't follow rules
         :param piecePos: Position of piece
         :type piecePos: Pos
-        :param newPos: Position to move to
+        :param newPos: Position to __move to
         :type newPos: Pos
         :rtype: None
         """
@@ -160,7 +160,7 @@ class dictBoard:
         :rtype: [Pos]
         """
         rList = []
-        # legal move for all pieces
+        # legal __move for all pieces
         rList.append((piecePos + Pos(1, 0)))
         rList.append((piecePos + Pos(-1, 0)))
         rList.append((piecePos + Pos(0, 1)))
@@ -217,7 +217,7 @@ class dictBoard:
 
         :param piecePos: Piece to be moved
         :type piecePos: Pos
-        :param newPos: Position to move to
+        :param newPos: Position to __move to
         :type newPos: Pos
         :return:
         :rtype: [(dictBoard, Pos, Pos)]
@@ -233,10 +233,10 @@ class dictBoard:
         # **********************************************Use index
         r_board = dictBoard(self.board.copy())
         if l.count(newPos) <= 0:
-            raise IllegalMoveError("NOOOOOOO! An illegal move!")
+            raise IllegalMoveError("NOOOOOOO! An illegal __move!")
 
         # TODO Count is terrible use index
-        r_board.move(piecePos, newPos)
+        r_board.__move(piecePos, newPos)
         r_board.whoseTurn = not r_board.whoseTurn
         return r_board, piecePos, newPos
 
@@ -308,9 +308,9 @@ class BoardTests(unittest.TestCase):
         foo = dictBoard(None)
         board = foo.board
         with self.assertRaises(IllegalMoveError):
-            foo.this_one(Pos(6,3),Pos(6,6)) # legal piece, illegal move
+            foo.this_one(Pos(6,3),Pos(6,6)) # legal piece, illegal __move
         with self.assertRaises(IllegalMoveError):
-            foo.this_one(Pos(6,5),Pos(5,5)) # illegal piece, legal move
+            foo.this_one(Pos(6,5),Pos(5,5)) # illegal piece, legal __move
         self.assertNotEqual(foo.get(Pos(6,4)),'K')
         foo2 = foo.this_one(Pos(6,3),Pos(6,4))[0]
         self.assertEqual(foo2.get(Pos(6,4)),'K')
