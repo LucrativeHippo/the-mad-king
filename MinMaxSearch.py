@@ -1,5 +1,6 @@
 import GameBoard
 import math
+from AlphaBeta import board_value
 
 DEPTH_LIMIT = 1
 
@@ -7,15 +8,20 @@ DEPTH_LIMIT = 1
 def minMaxFunction(state):
     """
 
-    :param state:
+    :param state: Current GameBoard
     :type state: GameBoard.dictBoard
-    :return:
-    :rtype: (int, Position.Pos)
+    :return: utility of move, original position, move position
+    :rtype: (int, (Position.Pos, Position.Pos))
     """
     if state.isTerminal():
-        return state.utility()
-    move, state = argmax(state.successors(state),
-                         lambda x: minValue(x[0]))
+        return state.utility(), None
+
+    move_list = []
+    for s in state.successors(state):
+        move_list.append(maxValue(s[0], s[1]))
+    move = max(move_list, key=lambda x: x[0])[1]
+    print(move_list)
+    print(move)
     return move
 
 
@@ -26,12 +32,17 @@ def maxValue(state, depth=0):
     :type state: GameBoard.dictBoard
     :return:
     """
-    if state.isTerminal() or depth == DEPTH_LIMIT:
+    if state.isTerminal():
         return state.utility()
+
+    if depth == DEPTH_LIMIT:
+        return board_value(state)
+
     value = -math.inf
     for (boardState, location, move) in state.successors(state):
-        value = max(value, minValue(boardState))
+        value = max(minValue(boardState, depth+1))
     return value
+
 
 def minValue(state, depth=0):
     """
@@ -40,18 +51,18 @@ def minValue(state, depth=0):
     :type state: GameBoard.dictBoard
     :return:
     """
-    if state.isTerminal() or depth == DEPTH_LIMIT:
+    if state.isTerminal():
         return state.utility()
 
+    if depth == DEPTH_LIMIT:
+        return board_value(state)
+
     value = math.inf
-    for (boardState, location, move) in state.possibleMoves(state):
-        value = min(value, maxValue(boardState))
+    for (boardState, location, move) in state.successors(state):
+        value = min(value, maxValue(boardState, depth+1))
     return value
 
-def argmax(statePairList):
-    maxUtil, maxMove = statePairList[0]
-    for v,m in statePairList:
-        if v > maxUtil:
-            maxUtil, maxMove = v,m
-    return maxUtil, maxMove
+
+
+
 

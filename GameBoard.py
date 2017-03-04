@@ -126,6 +126,30 @@ class dictBoard:
             if value == 'K':
                 return key
 
+    @property
+    def king_clear(self):
+        # TODO check if guards shorten path
+        for d in self.board.items():
+            if (d[1] == 'D') \
+                    & (d.distance_to(Pos(0, self.king_pos.y)) < self.king_pos.x):
+                return False
+        return True
+    @property
+    def num_dragons(self):
+        count = 0
+        for i in self.board.values():
+            if i is 'D':
+                count += 1
+        return count
+
+    @property
+    def num_guards(self):
+        count = 0
+        for i in self.board.values():
+            if i is 'G':
+                count += 1
+        return count
+
     def winFor(self, player):
         """
         Returns end value of board,
@@ -139,15 +163,21 @@ class dictBoard:
             king_pos = self.king_pos
             assert king_pos is not None
 
-            if player is KING_SQUIRTLE_SQUAD:
+            # guards die off
+            if (self.num_dragons >= 3) & (self.num_guards == 0) & (not self.king_clear):
+                won = True
+                self.cachedWinner = PUFFS_MAGICAL_DRAGON_SQUAD
+                self.cachedWin = True
+            elif player is KING_SQUIRTLE_SQUAD:
                 if king_pos.x == 0:
+                    won = True
+                elif self.num_dragons < 3:
                     won = True
             elif player is PUFFS_MAGICAL_DRAGON_SQUAD:
                 if (len(self.get_legal_moves(king_pos)) is 0) \
                         & (self.is_squirtle_surround(king_pos)):
                     won = True
                 # TODO check if tie
-                    # case 1: two or less drangon king wins
                     # case 2: three or more drangons and no gaurds, dragons win
             if won:
                 self.cachedWin = True
@@ -269,7 +299,7 @@ class dictBoard:
         :param newPos: Position to __move to
         :type newPos: Pos
         :return:
-        :rtype: (dictBoard, Pos, Pos)
+        :rtype: (dictBoard, (Pos, Pos))
         """
         if self.board.get(piecePos) is None:
             raise IllegalMoveError("Invalid Piece")
@@ -284,7 +314,7 @@ class dictBoard:
         # fixme count is terrible use index
         r_board.__move(piecePos, newPos)
         r_board.whoseTurn = not r_board.whoseTurn
-        return r_board, piecePos, newPos
+        return r_board, (piecePos, newPos)
 
     def teamPieces(self, team=None):
         """
@@ -300,19 +330,19 @@ class dictBoard:
         if team == KING_SQUIRTLE_SQUAD:
             for i in temp:
                 if i[1] == 'G' or i[1] == 'K':
-                    potential_moves.append(i)
+                    potential_moves.append(i[0])
         else:
             for i in temp:
                 if i[1] == 'D':
-                    potential_moves.append(i)
+                    potential_moves.append(i[0])
 
         return potential_moves
 
     def successors(self):
         """
         Returns list of all moves for all pieces of the current player
-        :return: list of all moves for the current players turn
-        :rtype: [dictBoard, Pos, Pos]
+        :return: new board state, original position, move position
+        :rtype: list[(dictBoard, (Pos, Pos))]
         """
         rList = []
         for p in self.teamPieces():
@@ -321,6 +351,11 @@ class dictBoard:
         return rList
 
     def utility(self):
+        """
+        Returns the winner value
+        :return:
+        :rtype:
+        """
         if self.winFor(WIN_FOR):
             return WIN_VALUE
         else:

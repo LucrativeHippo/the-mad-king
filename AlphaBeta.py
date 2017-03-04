@@ -1,13 +1,25 @@
-def boardValue(board):
-    if board.isTerminal:
-        raise Exception()
+from GameBoard import dictBoard
+
+
+def board_value(board):
+    """
+
+    :param board:
+    :type board: dictBoard
+    :return:
+    :rtype:
+    """
+    if board.isTerminal():
+        return board.utility()
     dragonCount = 0
-    gaurdCount = 0
+    guardCount = 0
     for i in board.values():
         if i == 'D':
             dragonCount += 1
         elif i == 'G':
-            gaurdCount +=1
+            guardCount += 1
+
+    return dragonCount*(-100) + guardCount*100 + (6-board.king_pos.x)*100
 
 
 
