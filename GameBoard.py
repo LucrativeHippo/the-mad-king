@@ -29,7 +29,7 @@ class MyTestObject:
 
 
 class dictBoard:
-    def __init__(self, state, player=PUFFS_MAGICAL_DRAGON_SQUAD):
+    def __init__(self, state, player=True):
         """
         Board dictionary with minimax functions
         :param state:
@@ -46,19 +46,24 @@ class dictBoard:
         self.cachedWinner = None
         if state is None:
             # This code runs only once, more efficient way to write it but shouldn't matter
-            self.board[Pos(6,0)] = 'D'
             self.board[Pos(6,6)] = 'D'
+            self.board[Pos(6,0)] = 'D'
             self.board[Pos(6,3)] = 'K'
             for i in range(2,5):
                 self.board[Pos(5,i)] = 'G'
-            self.board[Pos(0,3)] = 'D'
-            self.board[Pos(1,1)] = 'D'
+            #self.board[Pos(5, 3)] = 'G'
+            #self.board[Pos(5, 4)] = 'G'
             self.board[Pos(1,5)] = 'D'
+            self.board[Pos(1,1)] = 'D'
+            self.board[Pos(0,3)] = 'D'
         else:
             self.board = state
+            del_list = []
             for p in self.board.items():
                 if self.is_squirtle_surround(p[0]) & (p[1] is 'G'):
-                    self.board.pop(p)
+                    del_list.append(p[0])
+            for p in del_list:
+                self.board.pop(p)
 
             if self.whoseTurn is KING_SQUIRTLE_SQUAD:
                 for p in self.teamPieces(PUFFS_MAGICAL_DRAGON_SQUAD):
@@ -66,8 +71,8 @@ class dictBoard:
                         self.board[p] = 'd'
             else:
                 # part of PUFFS_MAGICAL_DRAGON_SQUAD
-                for p in self.board.keys():
-                    self.board[p] = self.board[p].upper()
+                for p in self.teamPieces(PUFFS_MAGICAL_DRAGON_SQUAD):
+                    self.board[p]='D'
 
     def __copy__(self):
         rv = dictBoard({})
@@ -131,14 +136,14 @@ class dictBoard:
         # TODO check if guards shorten path
         for d in self.board.items():
             if (d[1] == 'D') \
-                    & (d.distance_to(Pos(0, self.king_pos.y)) < self.king_pos.x):
+                    & (d[0].distance_to(Pos(0, self.king_pos.y)) < self.king_pos.x):
                 return False
         return True
     @property
     def num_dragons(self):
         count = 0
         for i in self.board.values():
-            if i is 'D':
+            if i in ('D','d'):
                 count += 1
         return count
 
@@ -146,8 +151,15 @@ class dictBoard:
     def num_guards(self):
         count = 0
         for i in self.board.values():
-            if i is 'G':
+            if i in ('G',"G"):
                 count += 1
+        return count
+
+    def num_little_ds(self):
+        count = 0
+        for i in self.board.values():
+            if i == 'd':
+                count+=1
         return count
 
     def winFor(self, player):
@@ -164,14 +176,16 @@ class dictBoard:
             assert king_pos is not None
 
             # guards die off
+            """
             if (self.num_dragons >= 3) & (self.num_guards == 0) & (not self.king_clear):
                 won = True
                 self.cachedWinner = PUFFS_MAGICAL_DRAGON_SQUAD
                 self.cachedWin = True
-            elif player is KING_SQUIRTLE_SQUAD:
+            """
+            if player is KING_SQUIRTLE_SQUAD:
                 if king_pos.x == 0:
                     won = True
-                elif self.num_dragons < 3:
+                elif self.num_dragons < 3 and self.num_guards > 0:
                     won = True
             elif player is PUFFS_MAGICAL_DRAGON_SQUAD:
                 if (len(self.get_legal_moves(king_pos)) is 0) \
@@ -207,7 +221,7 @@ class dictBoard:
         for i in (-1, 1):
             if self.get(piecePos + Pos(i, 0)) in ('d', 'D'):
                 gk_count += 1
-            if self.get(piecePos + Pos(0, i)) in ('d', 'd'):
+            if self.get(piecePos + Pos(0, i)) in ('d', 'D'):
                 gk_count += 1
             if gk_count > 2:
                 return True
@@ -264,13 +278,20 @@ class dictBoard:
             rList.append((piecePos + Pos(-1, -1)))
         return rList
 
-    """
-    def get_neighbours_pos(self, piecePos):
-        return [piecePos + Pos(1, 0),
-                piecePos + Pos(0, 1),
-                piecePos - Pos(1, 0),
-                piecePos - Pos(0, 1)]
-    """
+
+    def get_neighbours_guards(self, piecePos):
+        count = 0
+        if self.board.get(piecePos + Pos(1, 0)) == 'G':
+            count += 1
+        if self.board.get(piecePos + Pos(0, 1)) == 'G':
+            count += 1
+        if self.board.get(piecePos + Pos(-1, 0)) == 'G':
+            count += 1
+        if self.board.get(piecePos + Pos(0, -1)) == 'G':
+            count += 1
+        return count
+
+
 
     def get_legal_moves(self, piecePos):
         """
@@ -301,6 +322,9 @@ class dictBoard:
         :return:
         :rtype: (dictBoard, (Pos, Pos))
         """
+        if newPos is None:
+            print("Victory")
+            return self,(piecePos, newPos)
         if self.board.get(piecePos) is None:
             raise IllegalMoveError("Invalid Piece")
 
@@ -313,7 +337,7 @@ class dictBoard:
 
         # fixme count is terrible use index
         r_board.__move(piecePos, newPos)
-        r_board.whoseTurn = not r_board.whoseTurn
+        r_board.whoseTurn = not self.whoseTurn
         return r_board, (piecePos, newPos)
 
     def teamPieces(self, team=None):

@@ -94,6 +94,6 @@ l = [T([T(value=7),T(value=6),T(value=8)]),T([T(value=1),T(value=100),T(value=8)
 t = T(l)
 
 duck = T([T(value=4),T(value=1),T(value=8)])
-print(minMaxFunction(duck))
+print(minMaxFunction(t))
 
 
