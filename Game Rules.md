@@ -14,7 +14,7 @@
 4| | | | | | | 
 5| | |g|g|g| | 
 6|d| | |k| | |d
-- King & Guard may take one step horizontally or vertically but not diagonoly (similar to Rooks)
+- King & Guard may take one step horizontally or vertically but not diagonaly (similar to Rooks)
 - If the King's movement is blocked by a Guard, and the space following is unoccupied, the King may **hop** over the Guard.
 - Players must make a move if possible.
 - If a player can't move and isn't in another endgame state the game is a draw
