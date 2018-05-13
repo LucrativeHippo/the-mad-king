@@ -39,7 +39,7 @@
 3|-|-|-|-|-
 
 - If a Guard is surrounded by at least 3 dragons, the Guard is captured and replaced by a Dragon (This happens immediately regardless of who's turn it is)
-- Guards can capture a Dragon if the Dragon is adjacent (horizontally or vertically, but not diagonally) to at least 2 Guards.
+- Guards can capture a Dragon if the Dragon is adjacent (horizontally or vertically, but not diagonally) to at least 2 Guards (King counts as a Guard for capturing).
 - When captured, the Dragon is removed from the board, and one of the guards moves into the place formerly occupied by the Dragon. 
     - This is more like a traditional capture in chess.  It is not immediate as in the capture of a Guard.)
     - If Player 1 moves a Guard to a position that completes the 2-Guard formation, Player 2 can still move the Dragon away from the threat of capture.  
