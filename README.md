@@ -20,4 +20,4 @@ From here we determined an efficient method of determing if we were in an end st
 
 After we have produced a fairly efficient search we move onto creating commands to move pieces. We then developed a MiniMax Search which we tested on a smaller solvable board, without a depth limit. Once we were assured of its ability we moved on to adapt it to having a depth limit and then returning the estimated value of a board at non-terminal states. After some testing we added AlphaBeta pruning to reduce the number of paths we searched down.
 
-![Results Table](cmpt317_table.PNG)
+![Results Table](results_table.PNG)
